@@ -12,14 +12,31 @@ activity <- read.csv("activity.csv")
 
 ## What is mean total number of steps taken per day?
 
+# 1. Calculate the total number of steps taken per day
+total_steps_per_day <- tapply(activity$steps, activity$date, sum, na.rm=TRUE)
+
+# 2.  Make a histogram of the total number of steps taken each day
+hist(total_steps_per_day)
+
+
+# 3. Calculate and report the mean and median of the total number of steps taken per day
+mean_total_steps <- mean(total_steps_per_day)
+
+median_total_steps <- median(total_steps_per_day)
 
 
 ## What is the average daily activity pattern?
 
+average_daily_activity_pattern <- tapply(activity$steps, activity$interval, mean, na.rm=TRUE)
+
+plot(names(average_daily_activity_pattern), average_daily_activity_pattern, type="l", xlab="time interval", ylab="average daily activity pattern", main="average number of steps for each interval")
+
+max_interval <- names(which.max(average_daily_activity_pattern))
+
+max_steps <- max(average_daily_activity_pattern)
 
 
 ## Imputing missing values
-
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
