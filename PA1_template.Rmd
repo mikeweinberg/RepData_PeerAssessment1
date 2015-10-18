@@ -8,6 +8,9 @@ output:
 
 ## Loading and preprocessing the data
 ```{r}
+library(lattice) 
+library(ggplot2)
+
 options(scipen=999)
 activity <- read.csv("activity.csv")
 
@@ -97,3 +100,29 @@ Mean total steps for the new data is `r new_mean_total_steps` and median total s
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+#### 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+```{r}
+#find which days are weekend or weekdays
+days <- as.POSIXlt(new_activity$date)$wday
+days_bool <- (days == 0) | (days == 6)
+
+#add the daytype factor
+new_activity[, "daytype"] <- factor(ifelse(days_bool,"weekend","weekday"))
+```
+
+#### 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+
+```{r}
+
+split_day_type <- split(new_activity, new_activity$daytype)
+
+average_daily_activity_pattern_weekdays <- tapply(split_day_type$weekday$steps, split_day_type$weekday$interval, mean, na.rm=TRUE)
+average_daily_activity_pattern_weekends <- tapply(split_day_type$weekend$steps, split_day_type$weekend$interval, mean, na.rm=TRUE)
+
+plot(names(average_daily_activity_pattern_weekdays), average_daily_activity_pattern_weekdays, type="l", xlab="time interval", ylab="average daily activity pattern for weekdays", main="weekdays- average number of steps for each interval")
+plot(names(average_daily_activity_pattern_weekends), average_daily_activity_pattern_weekends, type="l", xlab="time interval", ylab="average daily activity pattern for weekends", main="weekends- average number of steps for each interval")
+
+```
+

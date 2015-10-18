@@ -4,6 +4,9 @@
 ## Loading and preprocessing the data
 
 ```r
+library(lattice) 
+library(ggplot2)
+
 options(scipen=999)
 activity <- read.csv("activity.csv")
 
@@ -100,7 +103,40 @@ new_mean_total_steps <- mean(new_total_steps_per_day)
 new_median_total_steps <- median(new_total_steps_per_day)
 ```
 
-Mean total steps for the new data is 9354.2295082 and median total steps is 10395. The changes from previously (9354.2295082 mean total steps and  10395 median total steps) were not substantial.
+Mean total steps for the new data is 9354.2295082 and median total steps is 10395. There wasn't a change from previously when 9354.2295082 was mean total steps and  10395 was median total steps.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+#### 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+
+```r
+#find which days are weekend or weekdays
+days <- as.POSIXlt(new_activity$date)$wday
+days_bool <- (days == 0) | (days == 6)
+
+#add the daytype factor
+new_activity[, "daytype"] <- factor(ifelse(days_bool,"weekend","weekday"))
+```
+
+#### 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+
+
+```r
+split_day_type <- split(new_activity, new_activity$daytype)
+
+average_daily_activity_pattern_weekdays <- tapply(split_day_type$weekday$steps, split_day_type$weekday$interval, mean, na.rm=TRUE)
+average_daily_activity_pattern_weekends <- tapply(split_day_type$weekend$steps, split_day_type$weekend$interval, mean, na.rm=TRUE)
+
+plot(names(average_daily_activity_pattern_weekdays), average_daily_activity_pattern_weekdays, type="l", xlab="time interval", ylab="average daily activity pattern for weekdays", main="weekdays- average number of steps for each interval")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+```r
+plot(names(average_daily_activity_pattern_weekends), average_daily_activity_pattern_weekends, type="l", xlab="time interval", ylab="average daily activity pattern for weekends", main="weekends- average number of steps for each interval")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-2.png) 
+
