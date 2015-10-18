@@ -46,7 +46,7 @@ max_interval <- names(which.max(average_daily_activity_pattern))
 max_steps <- max(average_daily_activity_pattern)
 ```
 
-The 5-minute interval that, on average, contains the maximum number of steps is 835 with 206.1698113 steps.
+The 5-minute interval that, on average, contains the maximum number of steps is **835** with **206.1698113** steps.
 
 ## Imputing missing values
 #### Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
